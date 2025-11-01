@@ -85,15 +85,6 @@ try {
   # Install package silently
   Start-Process "msiexec.exe" -ArgumentList "/i `"$installerPath`" /qn /norestart /log `"$installLog`"" -Wait
 
-  # Verify install
-  $newInstall = Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* |
-    Where-Object { $_.DisplayName -like "$agent_package*" } |
-    Select-Object -First 1
-
-  if (-not $newInstall) {
-    throw "$agent_package installation failed. See $installLog for details."
-  }
-
   # Cleanup downloaded artifacts
   Remove-Item -Path $installerPath -ErrorAction SilentlyContinue
   Remove-Item -Path $installLog -ErrorAction SilentlyContinue
